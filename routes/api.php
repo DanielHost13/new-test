@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/register', [UserController::class, 'register']);
+Route::post('/user', [UserController::class, 'register']);
 
 Route::middleware('auth:api')->group(function(){
     Route::get('/user', function (Request $request) {
@@ -28,6 +28,8 @@ Route::middleware('auth:api')->group(function(){
 
     Route::apiResource('/parentCategories', ParentCategoryController::class)->except('create', 'edit');
     Route::apiResource('/categories', CategoryController::class)->except('create', 'edit');
+    Route::put('/user/{id}', [UserController::class, 'update']);
+
     
 });
 
