@@ -10,6 +10,26 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+
+    public function index(){
+
+        $users = User::paginate(5);
+
+        if ($users == null) { //VALIDATE THAT THE USER EXISTS
+            return response()->json([
+                'status' => 'error',
+                'code' =>  404,
+                'message' => 'Users not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' =>  200,
+            'message' => 'All users',
+            'user' => $users
+        ], 200);
+    }
     public function login(Request $request)
     {
         //Login validation
@@ -94,13 +114,38 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function show($id){
+
+        $user = User::find($id);
+        if ($user == null) { //VALIDATE THAT THE USER EXISTS
+            return response()->json([
+                'status' => 'error',
+                'code' =>  404,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'code' =>  200,
+            'message' => 'User successfully deleted',
+            'user' => $user
+        ], 200);
+
+    }
+
+    /**
+     * Función para actualizar el usuario
+     * @param Number
+     * @return Json
+     */
     public function update(Request $request, $id)
     {
        $user = User::find($id);
 
        $validate = Validator::make($request->all(), [
             'name' => 'required|string|min:5|max:100',
-            'email' => 'required|email:rfc,dns|unique:users|max:150',
+            'email' => 'required|email:rfc,dns|max:150|unique:users,email,'.$id,
             'password' => 'required|confirmed|min:8|max:16'
         ]);
 
@@ -133,6 +178,26 @@ class UserController extends Controller
             'code' =>  200,
             'message' => 'Successfully registered user',
             'user' => $user
+        ], 200);
+    }
+
+    public function delete($id){
+
+        $user = User::find($id);
+        if ($user == null) { //VALIDATE THAT THE USER EXISTS
+            return response()->json([
+                'status' => 'error',
+                'code' =>  404,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'code' =>  200,
+            'message' => 'User successfully deleted'
         ], 200);
     }
 }

@@ -28,9 +28,14 @@ Route::middleware('auth:api')->group(function(){
 
     Route::apiResource('/parentCategories', ParentCategoryController::class)->except('create', 'edit');
     Route::apiResource('/categories', CategoryController::class)->except('create', 'edit');
-    Route::put('/user/{id}', [UserController::class, 'update']);
 
+    //RUTA PARA CRUD DE USUARIOS
+    Route::get('/user', [UserController::class, 'index']);
+    Route::get('/user/{id}', [UserController::class, 'show']);
+    Route::put('/user/{id}', [UserController::class, 'update']);
+    Route::delete('/user/{id}', [UserController::class, 'delete']);
     
+
 });
 
 
